@@ -3,9 +3,12 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from snippets import views
 
 urlpatterns = [
-    path('', views.SnippetListGeneric.as_view()),
-    path('<int:pk>/', views.SnippetDetailGeneric.as_view()),
-    path('users/', views.UserListGeneric.as_view()),
+    path('', views.api_root),
+    # path(),
+    path('snippets/', views.SnippetListGeneric.as_view(), name='snippet-list'),
+    path('snippets/<int:pk>/highlight/', views.SnippetHighlight.as_view()),
+    path('snippets/<int:pk>/', views.SnippetDetailGeneric.as_view()),
+    path('users/', views.UserListGeneric.as_view(), name='user-list'),
     path('users/<int:pk>', views.UserDetailGeneric.as_view()),
 ]
 
