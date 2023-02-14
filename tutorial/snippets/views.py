@@ -1,7 +1,5 @@
-from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from snippets.models import Snippet
 from snippets.serializers import SnippetModelSerializer
@@ -30,18 +28,17 @@ def snippet_detail(request, pk):
     try:
         snippet = Snippet.objects.get(pk=pk)
     except Snippet.DoesNotExist:
-        return HttpResponse(status=404)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = SnippetModelSerializer(snippet)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
     elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = SnippetModelSerializer(snippet, data=data)
+        serializer = SnippetModelSerializer(snippet, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         snippet.detele()
-        return HttpResponse(status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
