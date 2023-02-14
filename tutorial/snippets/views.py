@@ -1,6 +1,6 @@
 from django.http import Http404
 from django.contrib.auth.models import User
-from rest_framework import generics, mixins, status
+from rest_framework import generics, mixins, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,6 +18,7 @@ class UserDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
 class SnippetListGeneric(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetModelSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         # NOTE: The user isn't sent as part of the serialized representation, but is instead a property of the incoming request.
@@ -28,6 +29,7 @@ class SnippetListGeneric(generics.ListCreateAPIView):
 class SnippetDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetModelSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class SnippetListWithMixin(mixins.ListModelMixin,
                            mixins.CreateModelMixin,
