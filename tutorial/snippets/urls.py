@@ -3,8 +3,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from snippets import views
 
 urlpatterns = [
-    path('', views.snippet_list),
-    path('<int:pk>/', views.snippet_detail),
+    path('', views.SnippetList.as_view()),
+    path('<int:pk>/', views.SnippetDetail.as_view()),
 ]
 
 # We don't necessarily need to add these extra url patterns in, but it gives us a simple, clean way of referring to a specific format.
