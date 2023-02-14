@@ -6,6 +6,14 @@ from rest_framework.views import APIView
 from snippets.models import Snippet
 from snippets.serializers import SnippetModelSerializer
 
+class SnippetListGeneric(generics.ListCreateAPIView):
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetModelSerializer
+
+class SnippetDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetModelSerializer
+
 class SnippetListWithMixin(mixins.ListModelMixin,
                            mixins.CreateModelMixin,
                            generics.GenericAPIView):
