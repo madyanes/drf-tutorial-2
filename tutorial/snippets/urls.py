@@ -5,6 +5,8 @@ from snippets import views
 urlpatterns = [
     path('', views.SnippetListGeneric.as_view()),
     path('<int:pk>/', views.SnippetDetailGeneric.as_view()),
+    path('users/', views.UserListGeneric.as_view()),
+    path('users/<int:pk>', views.UserDetailGeneric.as_view()),
 ]
 
 # We don't necessarily need to add these extra url patterns in, but it gives us a simple, clean way of referring to a specific format.

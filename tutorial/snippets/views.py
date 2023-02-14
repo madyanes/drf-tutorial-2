@@ -1,14 +1,29 @@
 from django.http import Http404
+from django.contrib.auth.models import User
 from rest_framework import generics, mixins, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from snippets.models import Snippet
-from snippets.serializers import SnippetModelSerializer
+from snippets.serializers import SnippetModelSerializer, UserModelSerializer
+
+class UserListGeneric(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserModelSerializer
+
+class UserDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserModelSerializer
 
 class SnippetListGeneric(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetModelSerializer
+
+    def perform_create(self, serializer):
+        # NOTE: The user isn't sent as part of the serialized representation, but is instead a property of the incoming request.
+        serializer.save(owner=self.request.user)  # Associating Snippets with Users
+        # The create() method of our serializer will now be passed an additional 'owner' field,
+        # along with the validated data from the request.
 
 class SnippetDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
