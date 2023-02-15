@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from snippets.models import Snippet
-from snippets.permissions import IsOwnerOrReadOnly
+from snippets.permissions import IsOwnerOrReadOnly, IsLoggedInUser
 from snippets.serializers import SnippetHyperlinkedModelSerializer, SnippetModelSerializer, UserHyperlinkedModelSerializer, UserModelSerializer
 
 @api_view(['GET'])
@@ -31,6 +31,7 @@ class UserListGeneric(generics.ListCreateAPIView):
 class UserDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserHyperlinkedModelSerializer
+    permission_classes = [IsLoggedInUser]
 
 class SnippetListGeneric(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
