@@ -7,7 +7,7 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from snippets.models import Snippet
 from snippets.permissions import IsOwnerOrReadOnly
-from snippets.serializers import SnippetModelSerializer, UserModelSerializer
+from snippets.serializers import SnippetHyperlinkedModelSerializer, SnippetModelSerializer, UserHyperlinkedModelSerializer, UserModelSerializer
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -26,15 +26,15 @@ class SnippetHighlight(generics.GenericAPIView):
 
 class UserListGeneric(generics.ListCreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserModelSerializer
+    serializer_class = UserHyperlinkedModelSerializer
 
 class UserDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
-    serializer_class = UserModelSerializer
+    serializer_class = UserHyperlinkedModelSerializer
 
 class SnippetListGeneric(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
-    serializer_class = SnippetModelSerializer
+    serializer_class = SnippetHyperlinkedModelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
@@ -45,7 +45,7 @@ class SnippetListGeneric(generics.ListCreateAPIView):
 
 class SnippetDetailGeneric(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
-    serializer_class = SnippetModelSerializer
+    serializer_class = SnippetHyperlinkedModelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 class SnippetListWithMixin(mixins.ListModelMixin,

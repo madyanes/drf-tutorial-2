@@ -2,6 +2,23 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 
+class SnippetHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    # Because we've included format suffixed URLs such as '.json',
+    # we also need to indicate on the highlight field that any format suffixed hyperlinks it returns should use the '.html' suffix.
+    highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
+
+    class Meta:
+        model = Snippet
+        fields = ['url', 'id', 'highlight', 'owner', 'title', 'code', 'linenos', 'language', 'style']
+
+class UserHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
+    snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['url', 'id', 'username', 'snippets']
+
 # Serializer in DRF is similar to Form in Django
 class SnippetSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)

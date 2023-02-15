@@ -6,10 +6,10 @@ urlpatterns = [
     path('', views.api_root),
     # path(),
     path('snippets/', views.SnippetListGeneric.as_view(), name='snippet-list'),
-    path('snippets/<int:pk>/highlight/', views.SnippetHighlight.as_view()),
-    path('snippets/<int:pk>/', views.SnippetDetailGeneric.as_view()),
+    path('snippets/<int:pk>/highlight/', views.SnippetHighlight.as_view(), name='snippet-highlight'),
+    path('snippets/<int:pk>/', views.SnippetDetailGeneric.as_view(), name='snippet-detail'),
     path('users/', views.UserListGeneric.as_view(), name='user-list'),
-    path('users/<int:pk>', views.UserDetailGeneric.as_view()),
+    path('users/<int:pk>', views.UserDetailGeneric.as_view(), name='user-detail'),
 ]
 
 # We don't necessarily need to add these extra url patterns in, but it gives us a simple, clean way of referring to a specific format.
