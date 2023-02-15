@@ -1,5 +1,6 @@
-from django.urls import path
+from django.urls import include, path
 from rest_framework import renderers
+from rest_framework.routers import DefaultRouter
 from rest_framework.urlpatterns import format_suffix_patterns
 from snippets import views
 
@@ -27,23 +28,23 @@ user_detail = views.UserViewSet.as_view({
     'get': 'retrieve'
 })
 
-urlpatterns = [
-    path('', views.api_root),
-    # path(),
-    path('snippets/', snippet_list, name='snippet-list'),
-    path('snippets/<int:pk>/highlight/', snippet_highlight, name='snippet-highlight'),
-    path('snippets/<int:pk>/', snippet_detail, name='snippet-detail'),
-    path('users/', user_list, name='user-list'),
-    path('users/<int:pk>', user_detail, name='user-detail'),
-]
+router = DefaultRouter()
+router.register(r'snippets', views.SnippetViewSet, basename='snippet')
+router.register(r'users', views.UserViewSet, basename='user')
 
-# We don't necessarily need to add these extra url patterns in, but it gives us a simple, clean way of referring to a specific format.
-urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = [
+    path('', include(router.urls)),
+    # path('snippets/', snippet_list, name='snippet-list'),
+    # path('snippets/<int:pk>/highlight/', snippet_highlight, name='snippet-highlight'),
+    # path('snippets/<int:pk>/', snippet_detail, name='snippet-detail'),
+    # path('users/', user_list, name='user-list'),
+    # path('users/<int:pk>', user_detail, name='user-detail'),
+]
 
 """
 EXAMPLE how to access (using httpie):
-http http://127.0.0.1:8000/ Accept:application/json           # Request JSON
-http http://127.0.0.1:8000/ Accept:text/html         # Request HTML
+http http://127.0.0.1:8000/ Accept:application/json          # Request JSON
+http http://127.0.0.1:8000/ Accept:text/html                 # Request HTML
 
 Or by appending a format suffix:
 http http://127.0.0.1:8000/.json  # JSON suffix
