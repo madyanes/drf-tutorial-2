@@ -1,15 +1,40 @@
 from django.urls import path
+from rest_framework import renderers
 from rest_framework.urlpatterns import format_suffix_patterns
 from snippets import views
+
+snippet_list = views.SnippetViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+snippet_detail = views.SnippetViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'delete': 'destroy'
+})
+
+snippet_highlight = views.SnippetViewSet.as_view({
+    'get': 'highlight'
+})
+
+user_list = views.UserViewSet.as_view({
+    'get': 'list'
+})
+
+user_detail = views.UserViewSet.as_view({
+    'get': 'retrieve'
+})
 
 urlpatterns = [
     path('', views.api_root),
     # path(),
-    path('snippets/', views.SnippetListGeneric.as_view(), name='snippet-list'),
-    path('snippets/<int:pk>/highlight/', views.SnippetHighlight.as_view(), name='snippet-highlight'),
-    path('snippets/<int:pk>/', views.SnippetDetailGeneric.as_view(), name='snippet-detail'),
-    path('users/', views.UserListGeneric.as_view(), name='user-list'),
-    path('users/<int:pk>', views.UserDetailGeneric.as_view(), name='user-detail'),
+    path('snippets/', snippet_list, name='snippet-list'),
+    path('snippets/<int:pk>/highlight/', snippet_highlight, name='snippet-highlight'),
+    path('snippets/<int:pk>/', snippet_detail, name='snippet-detail'),
+    path('users/', user_list, name='user-list'),
+    path('users/<int:pk>', user_detail, name='user-detail'),
 ]
 
 # We don't necessarily need to add these extra url patterns in, but it gives us a simple, clean way of referring to a specific format.
